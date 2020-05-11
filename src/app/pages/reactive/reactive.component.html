@@ -1,0 +1,161 @@
+<h4>Formularios <small> Reactivos </small></h4>
+<hr>
+<!-- se usa 'ngSubmit' para postear el formulario  -->
+<form autocomplete="off" [formGroup]="forma" (ngSubmit)="guardar()">
+
+    <div>
+        <!-- se definen los campos del formulario -->
+        <div class="form-group row">
+            <label class="col-2 col-form-label">Nombre</label>
+            <div class="col">
+                <!-- se controla el estilo del input box para resaltar cuando es invalido -->
+                <!-- se hace manipulando la clase del input con [class.<mi-clase-para-data-invalida> = "boolean de validacion" -->
+                <input class="form-control" type="text" placeholder="Nombre" formControlName="nombre" [class.is-invalid]="nombreNoValido">
+                <!-- usamos 'ngIf' con un <small>texto de alerta</small> para visualizar un texto de alerta cuando los datos son invalidos -->
+                <small *ngIf="nombreNoValido" class="text-danger">
+          Ingrese 5 letras
+        </small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-2 col-form-label">Apellido</label>
+            <div class="col">
+
+                <input class="form-control" type="text" placeholder="Apellido" formControlName="apellido" [class.is-invalid]="apellidoNoValido">
+                <small *ngIf="apellidoNoValido" class="text-danger">
+                Ingrese el apellido
+        </small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Correo</label>
+        <div class="col">
+
+            <input class="form-control" type="email" placeholder="Correo electrónico" formControlName="correo" [class.is-invalid]="correoNoValido">
+            <small *ngIf="correoNoValido" class="text-danger">
+              Ingrese el correo
+      </small>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Usuario</label>
+        <div class="col">
+
+            <input class="form-control" type="email" placeholder="Nombre de usuario" formControlName="usuario" [class.is-invalid]="usuarioNoValido">
+            <small *ngIf="usuarioNoValido" class="text-danger">
+          Ese nombre de usuario ya fue tomado.
+      </small>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Contraseña</label>
+        <div class="col">
+
+            <input class="form-control" type="password" placeholder="Contraseña" formControlName="pass1" [class.is-invalid]="pass1NoValido">
+
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Repita</label>
+        <div class="col">
+
+            <input class="form-control" type="password" placeholder="Repita contraseña" [class.is-invalid]="pass2NoValido" formControlName="pass2">
+
+        </div>
+    </div>
+
+
+    <!-- la direccion se maneja con un FormGroup porque tiene varios campos -->
+    <!-- es como un subformulario dentro de otro formulario -->
+    <!-- usamos un div contenedor para todo el grupo para manejar lo mejor -->
+    <div class="form-group row" formGroupName="direccion">
+        <label class="col-2 col-form-label">Direccion</label>
+        <div class="form-row col">
+
+            <div class="col">
+
+                <input type="text" class="form-control" placeholder="Distrito" formControlName="distrito" [class.is-invalid]="distritoNoValido">
+
+            </div>
+
+            <div class="col">
+
+                <input type="text" class="form-control" placeholder="Ciudad" formControlName="ciudad" [class.is-invalid]="ciudadNoValido">
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <!-- definir el campo tipo array como un table -->
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Pasatiempo</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <!-- usar el table body para cada elemento del array en una fila llenada con *ngFor-->
+                <tbody formArrayName="pasatiempos">
+                    <tr *ngFor="let control of pasatiempos.controls; let i = index">
+                        <!-- el index en columna 1 -->
+                        <td> {{ i + 1 }} </td>
+                        <td>
+                            <!-- el form control name va estar mapeado con el index del array -->
+                            <input (keyup.enter)="agregarPasatiempo()" class="form-control" type="text" [formControlName]="i">
+                        </td>
+                        <td>
+                            <!-- poner un boton para permitir borrar ese campo indexado por 'index' -->
+                            <button type="button" class="btn btn-danger" (click)="borrarPasatiempo(i)">
+                            -
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button (click)="agregarPasatiempo()" type="button" class="btn btn-primary mt-3 mb-5 btn-block">
+        + Agregar
+      </button>
+
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">&nbsp;</label>
+        <div class="input-group col">
+            <button type="button" (click)="guardar()" class="btn btn-outline-primary btn-block">
+        Guardar
+      </button>
+        </div>
+    </div>
+
+</form>
+
+
+
+<hr>
+<pre>
+  Estado del formulario: {{ forma.valid }}
+  <br>
+  Status: {{ forma.status }}
+</pre>
+
+<pre>
+
+  {{ forma.value | json }}
+
+</pre>
